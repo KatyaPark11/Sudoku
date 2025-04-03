@@ -11,7 +11,7 @@ var board [N][N]int
 var steps [][N][N]int // Список шагов решения
 
 func isSafe(board [N][N]int, row, col, num int) bool {
-	for x := 0; x < N; x++ {
+	for x := range N {
 		if board[row][x] == num || board[x][col] == num || board[row/3*3+x/3][col/3*3+x%3] == num {
 			return false
 		}
@@ -19,9 +19,114 @@ func isSafe(board [N][N]int, row, col, num int) bool {
 	return true
 }
 
+func hiddenSingles(board *[N][N]int) bool {
+	found := false
+
+	// Проверяем каждое число от 1 до 9
+	for num := 1; num <= 9; num++ {
+		// Проверяем каждый бокс
+		for boxRow := range 3 {
+			for boxCol := range 3 {
+				// Определяем координаты верхнего левого угла бокса
+				startRow := boxRow * 3
+				startCol := boxCol * 3
+
+				// Список для хранения возможных позиций для текущего числа в боксе
+				possiblePositions := []struct{ row, col int }{}
+
+				// Ищем возможные позиции для числа в текущем боксе
+				for i := range 3 {
+					for j := range 3 {
+						row := startRow + i
+						col := startCol + j
+
+						if board[row][col] == 0 && isSafe(*board, row, col, num) {
+							possiblePositions = append(possiblePositions, struct{ row, col int }{row, col})
+						}
+					}
+				}
+
+				// Если только одна возможная позиция для числа в боксе
+				if len(possiblePositions) == 1 {
+					board[possiblePositions[0].row][possiblePositions[0].col] = num
+					found = true
+				}
+			}
+		}
+
+		// Проверяем каждую строку и столбец
+		for i := range N {
+			possibleRowPos := -1
+			possibleColPos := -1
+
+			// Проверяем строки и столбцы на наличие единственного кандидата для числа
+			for j := range N {
+				if board[i][j] == 0 && isSafe(*board, i, j, num) {
+					if possibleRowPos == -1 {
+						possibleRowPos = j // Запоминаем первую возможную позицию
+					} else {
+						possibleRowPos = -2 // Больше одной позиции найдено
+						break
+					}
+				}
+			}
+
+			if possibleRowPos != -2 && possibleRowPos != -1 { // Если нашли единственную позицию в строке
+				board[i][possibleRowPos] = num
+				found = true
+			}
+
+			for j := range N {
+				if board[j][i] == 0 && isSafe(*board, j, i, num) {
+					if possibleColPos == -1 {
+						possibleColPos = j // Запоминаем первую возможную позицию
+					} else {
+						possibleColPos = -2 // Больше одной позиции найдено
+						break
+					}
+				}
+			}
+
+			if possibleColPos != -2 && possibleColPos != -1 { // Если нашли единственную позицию в столбце
+				board[possibleColPos][i] = num
+				found = true
+			}
+		}
+	}
+
+	return found // Возвращаем true если были сделаны изменения на доске.
+}
+
 func solveSudoku(board *[N][N]int, isSteps bool) bool {
-	for row := 0; row < N; row++ {
-		for col := 0; col < N; col++ {
+	strategies := []func(*[N][N]int) bool{
+		hiddenSingles,
+
+		// Добавьте остальные стратегии в порядке их приоритета...
+	}
+
+	for {
+		madeProgress := false
+
+		for _, strategy := range strategies {
+			if strategy(board) {
+				madeProgress = true
+				if isSteps {
+					saveStep(*board) // Сохраняем текущий шаг после применения стратегии
+				}
+			}
+		}
+
+		if !madeProgress { // Если не было сделано прогресса, значит, нужно использовать пробу и ошибку
+			break
+		}
+	}
+
+	return backtrackSolve(board, isSteps)
+}
+
+func backtrackSolve(board *[N][N]int, isSteps bool) bool {
+	for row := range N {
+		for col := range N {
 			if board[row][col] == 0 {
 				for num := 1; num <= 9; num++ {
 					if isSafe(*board, row, col, num) {
@@ -29,7 +134,7 @@ func solveSudoku(board *[N][N]int, isSteps bool) bool {
 						if isSteps {
 							saveStep(*board) // Сохраняем текущий шаг
 						}
-						if solveSudoku(board, isSteps) {
+						if backtrackSolve(board, isSteps) {
 							return true
 						}
 						board[row][col] = 0

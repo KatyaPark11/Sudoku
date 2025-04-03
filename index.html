@@ -128,7 +128,7 @@
                     document.getElementById('stepControls').style.display = 'none'; // Скрываем кнопки шагов
                 } else {
                     steps = solution;
-                    currentStep = 0; // Сбрасываем текущий шаг
+                    currentStep = -1; // Сбрасываем текущий шаг
                 }
             } else {
                 alert('Error: ' + response.statusText);
@@ -168,7 +168,6 @@
             resultTable.querySelector('tbody').innerHTML = ''; // Удаляем таблицу результатов
             document.getElementById('stepControls').style.display = 'block'; // Показываем кнопки шагов
             sendRequest(stepTag);
-            displayStep(currentStep); // Отображаем первый шаг
         };
 
         document.getElementById('prevStepButton').onclick = function() {
@@ -199,7 +198,7 @@
         function fillInputs(step) {
             const inputs = document.querySelectorAll('input');
             for (let i = 0; i < step.length; i++) { 
-                for (let j = 0; j < step[i].length; j++) { 
+                for (let j = 0; j < step[i].length; j++) {
                     inputs[i * 9 + j].value = step[i][j] === null ? '' : step[i][j]; 
                 } 
             } 
