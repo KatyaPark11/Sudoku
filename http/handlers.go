@@ -6,8 +6,7 @@ import (
 	"log"
 	"net/http"
 	"time"
-
-	"github.com/KatyaPark11/Sudoku/grpc_clients" // подключение к gRPC клиентам
+	// подключение к gRPC клиентам
 )
 
 // Структуры для JSON-запросов/ответов
