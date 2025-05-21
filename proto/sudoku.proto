@@ -5,13 +5,13 @@ package sudoku;
 option go_package = "/sudoku";
 
 service SudokuService {
-  rpc Solve(SudokuRequest) returns (SudokuResponse);
+  rpc Solve (SudokuRequest) returns (SudokuResponse);
 }
 
 message SudokuRequest {
-  string puzzle = 1; // строка с судоку, например, 81 символов или в виде строки
+  string puzzle = 1;
 }
 
 message SudokuResponse {
-  string solution = 1; // решённое судоку
+  string solution = 1;
 }

@@ -7,7 +7,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/KatyaPark11/Sudoku/client" // подключение к gRPC клиентам
+	pbAuth "github.com/KatyaPark11/Sudoku/generated/auth"     // замените на ваш путь сгенерированных proto
+	pbSudoku "github.com/KatyaPark11/Sudoku/generated/sudoku" // замените на ваш путь сгенерированных proto
 )
 
 // Структуры для JSON-запросов/ответов
@@ -40,16 +41,14 @@ type SolveResponse struct {
 func handleRegister(w http.ResponseWriter, r *http.Request) {
 	var req RegisterRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		http.Error(w, "Invalid request", http.StatusBadRequest)
+		http.Error(w, "Invalid request"+req.Username+req.Password, http.StatusBadRequest)
 		return
 	}
 
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	authClient := client.AuthClient()
-
-	resp, err := authClient.Register(ctx, &client.RegisterRequest{
+	resp, err := authClient.Register(ctx, &pbAuth.RegisterRequest{
 		Username: req.Username,
 		Password: req.Password,
 	})
@@ -73,9 +72,7 @@ func handleLogin(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	authClient := client.AuthClient()
-
-	resp, err := authClient.Login(ctx, &client.LoginRequest{
+	resp, err := authClient.Login(ctx, &pbAuth.LoginRequest{
 		Username: req.Username,
 		Password: req.Password,
 	})
@@ -110,9 +107,7 @@ func handleSolve(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	sudokuClient := client.SudokuClient()
-
-	resp, err := sudokuClient.Solve(ctx, &client.SudokuRequest{Puzzle: req.Puzzle})
+	resp, err := sudokuClient.Solve(ctx, &pbSudoku.SudokuRequest{Puzzle: req.Puzzle})
 	if err != nil {
 		log.Println("Sudoku solve error:", err)
 		json.NewEncoder(w).Encode(SolveResponse{Error: "Failed to solve"})

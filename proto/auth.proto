@@ -26,5 +26,5 @@ message LoginRequest {
 
 message LoginResponse {
   bool success = 1;
-  string token = 2; // например, JWT или любой токен
+  string token = 2;
 }

@@ -180,7 +180,7 @@ func (x *LoginRequest) GetPassword() string {
 type LoginResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Success       bool                   `protobuf:"varint,1,opt,name=success,proto3" json:"success,omitempty"`
-	Token         string                 `protobuf:"bytes,2,opt,name=token,proto3" json:"token,omitempty"` // например, JWT или любой токен
+	Token         string                 `protobuf:"bytes,2,opt,name=token,proto3" json:"token,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }

@@ -23,7 +23,7 @@ const (
 
 type SudokuRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Puzzle        string                 `protobuf:"bytes,1,opt,name=puzzle,proto3" json:"puzzle,omitempty"` // строка с судоку, например, 81 символов или в виде строки
+	Puzzle        string                 `protobuf:"bytes,1,opt,name=puzzle,proto3" json:"puzzle,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -67,7 +67,7 @@ func (x *SudokuRequest) GetPuzzle() string {
 
 type SudokuResponse struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
-	Solution      string                 `protobuf:"bytes,1,opt,name=solution,proto3" json:"solution,omitempty"` // решённое судоку
+	Solution      string                 `protobuf:"bytes,1,opt,name=solution,proto3" json:"solution,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
