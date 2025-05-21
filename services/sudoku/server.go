@@ -5,7 +5,7 @@ import (
 	"log"
 	"net"
 
-	pb "github.com/KatyaPark11/Sudoku/generated"
+	pb "github.com/KatyaPark11/Sudoku/generated/sudoku"
 	"google.golang.org/grpc"
 )
 
