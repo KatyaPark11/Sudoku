@@ -1,4 +1,4 @@
-package client
+package grpc_clients
 
 import (
 	"log"

@@ -6,7 +6,8 @@ import (
 	"log"
 	"net/http"
 	"time"
-	// подключение к gRPC клиентам
+
+	"github.com/KatyaPark11/Sudoku/client" // подключение к gRPC клиентам
 )
 
 // Структуры для JSON-запросов/ответов
@@ -46,9 +47,9 @@ func handleRegister(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	authClient := grpc_clients.AuthClient()
+	authClient := client.AuthClient()
 
-	resp, err := authClient.Register(ctx, &grpc_clients.RegisterRequest{
+	resp, err := authClient.Register(ctx, &client.RegisterRequest{
 		Username: req.Username,
 		Password: req.Password,
 	})
@@ -72,9 +73,9 @@ func handleLogin(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	authClient := grpc_clients.AuthClient()
+	authClient := client.AuthClient()
 
-	resp, err := authClient.Login(ctx, &grpc_clients.LoginRequest{
+	resp, err := authClient.Login(ctx, &client.LoginRequest{
 		Username: req.Username,
 		Password: req.Password,
 	})
@@ -109,9 +110,9 @@ func handleSolve(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	sudokuClient := grpc_clients.SudokuClient()
+	sudokuClient := client.SudokuClient()
 
-	resp, err := sudokuClient.Solve(ctx, &grpc_clients.SudokuRequest{Puzzle: req.Puzzle})
+	resp, err := sudokuClient.Solve(ctx, &client.SudokuRequest{Puzzle: req.Puzzle})
 	if err != nil {
 		log.Println("Sudoku solve error:", err)
 		json.NewEncoder(w).Encode(SolveResponse{Error: "Failed to solve"})
