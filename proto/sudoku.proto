@@ -2,6 +2,8 @@ syntax = "proto3";
 
 package sudoku;
 
+option go_package = "/sudoku";
+
 service SudokuService {
   rpc Solve(SudokuRequest) returns (SudokuResponse);
 }
