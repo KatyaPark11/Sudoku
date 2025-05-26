@@ -32,7 +32,9 @@ func main() {
 	sudokuClient = pbSudoku.NewSudokuServiceClient(sudokuConn)
 
 	// Запуск HTTP-сервера или другого основного кода
-	http.HandleFunc("/", serveIndex)
+	http.HandleFunc("/register.html", serveRegisterPage)
+	http.HandleFunc("/login.html", serveLoginPage)
+	http.HandleFunc("/sudoku.html", serveSudokuPage)
 	http.HandleFunc("/api/register", handleRegister)
 	http.HandleFunc("/api/login", handleLogin)
 	http.HandleFunc("/api/solve", handleSolve)
@@ -47,6 +49,14 @@ func main() {
 	}
 }
 
-func serveIndex(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, "./static/index.html")
+func serveRegisterPage(w http.ResponseWriter, r *http.Request) {
+	http.ServeFile(w, r, "./static/register.html")
+}
+
+func serveLoginPage(w http.ResponseWriter, r *http.Request) {
+	http.ServeFile(w, r, "./static/login.html")
+}
+
+func serveSudokuPage(w http.ResponseWriter, r *http.Request) {
+	http.ServeFile(w, r, "./static/sudoku.html")
 }

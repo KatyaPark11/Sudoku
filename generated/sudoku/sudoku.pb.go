@@ -24,6 +24,7 @@ const (
 type SudokuRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	Puzzle        string                 `protobuf:"bytes,1,opt,name=puzzle,proto3" json:"puzzle,omitempty"`
+	IsSteps       bool                   `protobuf:"varint,2,opt,name=isSteps,proto3" json:"isSteps,omitempty"`
 	unknownFields protoimpl.UnknownFields
 	sizeCache     protoimpl.SizeCache
 }
@@ -63,6 +64,13 @@ func (x *SudokuRequest) GetPuzzle() string {
 		return x.Puzzle
 	}
 	return ""
+}
+
+func (x *SudokuRequest) GetIsSteps() bool {
+	if x != nil {
+		return x.IsSteps
+	}
+	return false
 }
 
 type SudokuResponse struct {
@@ -113,9 +121,10 @@ var File_sudoku_proto protoreflect.FileDescriptor
 
 const file_sudoku_proto_rawDesc = "" +
 	"\n" +
-	"\fsudoku.proto\x12\x06sudoku\"'\n" +
+	"\fsudoku.proto\x12\x06sudoku\"A\n" +
 	"\rSudokuRequest\x12\x16\n" +
-	"\x06puzzle\x18\x01 \x01(\tR\x06puzzle\",\n" +
+	"\x06puzzle\x18\x01 \x01(\tR\x06puzzle\x12\x18\n" +
+	"\aisSteps\x18\x02 \x01(\bR\aisSteps\",\n" +
 	"\x0eSudokuResponse\x12\x1a\n" +
 	"\bsolution\x18\x01 \x01(\tR\bsolution2G\n" +
 	"\rSudokuService\x126\n" +

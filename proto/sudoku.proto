@@ -10,6 +10,7 @@ service SudokuService {
 
 message SudokuRequest {
   string puzzle = 1;
+  bool isSteps = 2;
 }
 
 message SudokuResponse {

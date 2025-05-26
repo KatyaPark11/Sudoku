@@ -29,7 +29,8 @@ type LoginResponse struct {
 }
 
 type SolveRequest struct {
-	Puzzle string `json:"puzzle"`
+	Puzzle  string `json:"puzzle"`
+	IsSteps bool   `json:"isSteps"`
 }
 
 type SolveResponse struct {
@@ -41,7 +42,7 @@ type SolveResponse struct {
 func handleRegister(w http.ResponseWriter, r *http.Request) {
 	var req RegisterRequest
 	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
-		http.Error(w, "Invalid request"+req.Username+req.Password, http.StatusBadRequest)
+		http.Error(w, "Invalid request", http.StatusBadRequest)
 		return
 	}
 
@@ -107,10 +108,10 @@ func handleSolve(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 
-	resp, err := sudokuClient.Solve(ctx, &pbSudoku.SudokuRequest{Puzzle: req.Puzzle})
+	resp, err := sudokuClient.Solve(ctx, &pbSudoku.SudokuRequest{Puzzle: req.Puzzle, IsSteps: req.IsSteps})
 	if err != nil {
 		log.Println("Sudoku solve error:", err)
-		json.NewEncoder(w).Encode(SolveResponse{Error: "Failed to solve"})
+		json.NewEncoder(w).Encode(SolveResponse{Error: "Данное судоку не имеет решения"})
 		return
 	}
 
